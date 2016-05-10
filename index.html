@@ -1,0 +1,55 @@
+<script>
+// // Declare Variables
+// var time = Math.round((Date.now()/1000)-((86400/24)*3));
+// var key = "e964d33cde30c141523b46f7f27e0007";
+// var lat = -22.98;
+// var lng = -43.26;
+
+	(function(){
+		// Create the XHR2 Object
+		function createCORSRequest(method, url){
+			var xhr = new XMLHttpRequest();
+			if("withCredentials" in xhr){
+				//XMLHttpRequest for Chrome, Firefox, Opera and Safari
+				xhr.open(method, url, true);
+			} else if(typeof XDomainRequest != "undefined"){
+				//XDomain Request for Internet Explorer
+				xhr = new XDomainRequest();
+				xhr.open(method, url);
+			} else {
+				//CORS not supported
+				xhr = null;
+			}
+			return xhr;
+		}
+		// A Method to Parse the Response
+		function parseResponse(data){
+			var sky = data.currently.summary;
+			return sky;
+		}
+
+		// Make the CORS Request
+		function makeCORSRequest(){
+			var url = "https://api.forecast.io/forecast/" + "e964d33cde30c141523b46f7f27e0007" + "/" + -22.98 + "," + -43.26 + "," + Math.round((Date.now()/1000)-((86400/24)*3)) + "?callback=?";
+			var xhr = createCORSRequest('GET', url);
+			if(!xhr){
+				alert("CORS not supported!");
+				return;
+			}
+			// Response Handlers
+			xhr.onload = function(){
+				var response = xhr.responseText;
+				var weather = parseResponse(response);
+				alert("The weather is " + weather);
+			};
+
+			xhr.onerror = function(){
+				alert("There was an error, homie.");
+			};
+
+			xhr.send();
+		}
+
+		makeCORSRequest();
+	})();
+</script>
